@@ -20,7 +20,7 @@ mkdir -p ~/go/src/github.com/jhellar
 cd ~/go/src/github.com/jhellar
 git clone https://github.com/jhellar/remote-write.git
 cd remote-write
-go build
+make
 ```
 
 Usage info:
