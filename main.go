@@ -90,13 +90,13 @@ func main() {
 	err := json.Unmarshal([]byte(file), &results)
 	if err != nil {
 		fmt.Println(err)
-		return
+		os.Exit(1)
 	}
 
 	serverURL, err := url.Parse(thanosURL + "/api/v1/receive")
 	if err != nil {
 		fmt.Println(err)
-		return
+		os.Exit(1)
 	}
 
 	conf := &remote.ClientConfig{
@@ -107,7 +107,7 @@ func main() {
 	c, err := remote.NewWriteClient("load-test", conf)
 	if err != nil {
 		fmt.Println(err)
-		return
+		os.Exit(1)
 	}
 
 	timeseries := make([]prompb.TimeSeries, 4)
@@ -129,7 +129,7 @@ func main() {
 	data, err := proto.Marshal(req)
 	if err != nil {
 		fmt.Println(err)
-		return
+		os.Exit(1)
 	}
 
 	compressed := snappy.Encode(buf, data)
@@ -139,6 +139,6 @@ func main() {
 	err = c.Store(context.Background(), buf)
 	if err != nil {
 		fmt.Println(err)
-		return
+		os.Exit(1)
 	}
 }
