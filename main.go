@@ -66,12 +66,19 @@ func main() {
 	thanosPtr := flag.String("thanos", "", "Thanos URL.")
 	jsonPtr := flag.String("results", "", "OMB results json path.")
 	labelsPtr := flag.String("labels", "", "Additional label:value pairs (separated by comma).")
+	insecurePtr := flag.Bool("insecure", false, "TLS insecure skip verify.")
+	tokenPtr := flag.String("token", "", "Bearer token.")
 
 	flag.Parse()
 
 	thanosURL := *thanosPtr
 	if thanosURL == "" {
 		thanosURL = os.Getenv("THANOS_RECEIVER_URL")
+	}
+
+	token := *tokenPtr
+	if token == "" {
+		token = os.Getenv("THANOS_BEARER_TOKEN")
 	}
 
 	labelsArr := strings.Split(*labelsPtr, ",")
@@ -102,6 +109,12 @@ func main() {
 	conf := &remote.ClientConfig{
 		URL:     &config.URL{URL: serverURL},
 		Timeout: model.Duration(time.Second),
+		HTTPClientConfig: config.HTTPClientConfig{
+			BearerToken: config.Secret(token),
+			TLSConfig: config.TLSConfig{
+				InsecureSkipVerify: *insecurePtr,
+			},
+		},
 	}
 
 	c, err := remote.NewWriteClient("load-test", conf)

@@ -28,16 +28,20 @@ Usage info:
 ```text
 ./remote-write -h
 Usage of ./remote-write:
+  -insecure
+    TLS insecure skip verify.
   -labels string
     Additional label:value pairs (separated by comma).
   -results string
     OMB results json path.
   -thanos string
     Thanos URL.
+  -token string
+    Bearer token.
 ```
 
 Example usage:
 
 ```bash
-./remote-write -thanos="http://thanos-receiver-route..." -results="./result.json" -labels="cluster:clusterA"
+./remote-write -thanos="http://thanos-receiver-route..." -results="./results.json" -labels="cluster_id:perf_test_cluster_a" -insecure -token="..."
 ```
